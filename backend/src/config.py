@@ -24,6 +24,10 @@ class Settings(BaseSettings):
         "http://127.0.0.1:5173"
     ]
 
+    @property
+    def DATABASE_URL(self) -> str:
+        return f"sqlite+aiosqlite:///{self.DB_PATH.as_posix()}"
+
     model_config = SettingsConfigDict(env_file=_get_env_path())
 
 
