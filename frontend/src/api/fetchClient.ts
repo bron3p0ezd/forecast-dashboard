@@ -4,6 +4,16 @@ type FetchClientOptions = {
   query?: QueryParams;
 };
 
+export class FetchError extends Error {
+  status: number;
+
+  constructor(status: number, message: string) {
+    super(message);
+    this.name = 'FetchError';
+    this.status = status;
+  }
+}
+
 const getBackendUrl = () => {
   const backendUrl = import.meta.env.VITE_BACKEND_URL;
 
@@ -44,7 +54,7 @@ export const get = async <ResponseBody>(
   }
 
   if (!response.ok) {
-    throw new Error(`Ошибка сервера при загрузке данных.`);
+    throw new FetchError(response.status, 'Ошибка сервера при загрузке данных.');
   }
 
   try {
