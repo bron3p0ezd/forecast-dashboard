@@ -1,10 +1,12 @@
 from datetime import date
 
+from fastapi import HTTPException, status
+
 from apps.item.enums import BiasDirection
 from apps.item.models import Daily, Item
 from apps.item.services import ItemService
 from apps.item.repositories import DailyRepository, ItemRepository
-from apps.item.schemas import ItemMetrics, ItemResponse, ItemRowsResponse, ItemsResponse
+from apps.item.schemas import ItemMetrics, ItemResponse, ItemRowResponse, ItemRowsResponse, ItemsResponse
 
 
 class ItemServiceImpl(ItemService):
@@ -23,6 +25,20 @@ class ItemServiceImpl(ItemService):
         items = await self.__repository.select_items_by_subcategory(subcategory)
 
         return self.__build_items_response(items)
+
+    async def get_item(
+        self,
+        sku: str,
+    ) -> ItemResponse | None:
+        item = await self.__repository.select_item_by_sku(sku)
+
+        if item is None:
+            raise HTTPException(
+                status_code=status.HTTP_404_NOT_FOUND,
+                detail="Item not found",
+            )
+
+        return self.__build_item_response(item)
 
     async def get_item_rows(
         self,
@@ -43,14 +59,17 @@ class ItemServiceImpl(ItemService):
         items: list[Item],
     ) -> ItemsResponse:
         return ItemsResponse(
-            items=[
-                ItemResponse(
-                    sku=item.item_id,
-                    name=item.item_name,
-                    subcategory=item.subcategory,
-                )
-                for item in items
-            ]
+            items=[self.__build_item_response(item) for item in items]
+        )
+
+    def __build_item_response(
+        self,
+        item: Item,
+    ) -> ItemResponse:
+        return ItemResponse(
+            sku=item.item_id,
+            name=item.item_name,
+            subcategory=item.subcategory,
         )
 
     def __build_item_rows_response(
@@ -58,7 +77,10 @@ class ItemServiceImpl(ItemService):
         rows: list[Daily],
     ) -> ItemRowsResponse:
         return ItemRowsResponse(
-            rows=rows,
+            rows=[
+                ItemRowResponse.model_validate(row)
+                for row in rows
+            ],
             metrics=self.__build_item_metrics(rows),
         )
 

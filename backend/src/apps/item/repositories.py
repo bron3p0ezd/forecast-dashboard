@@ -7,6 +7,13 @@ from settings.repositories import Repository
 
 class ItemRepository(Repository):
     @abstractmethod
+    async def select_item_by_sku(
+        self,
+        sku: str,
+    ) -> Item | None:
+        ...
+
+    @abstractmethod
     async def select_items_by_subcategory(
         self,
         subcategory: str | None,

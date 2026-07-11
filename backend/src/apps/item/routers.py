@@ -2,7 +2,7 @@ from datetime import date
 
 from fastapi import APIRouter, Depends, Path, Query
 
-from apps.item.schemas import ItemRowsResponse, ItemsResponse
+from apps.item.schemas import ItemResponse, ItemRowsResponse, ItemsResponse
 from apps.item.services import ItemService
 from apps.item.dependencies import get_item_service
 
@@ -25,6 +25,18 @@ async def get_items(
     item_service: ItemService = Depends(get_item_service),
 ):
     response = await item_service.get_items(subcategory)
+    return response
+
+
+@router.get(
+    "/{sku}",
+    response_model=ItemResponse,
+)
+async def get_item(
+    sku: str = Path(),
+    item_service: ItemService = Depends(get_item_service),
+):
+    response = await item_service.get_item(sku)
     return response
 
 
