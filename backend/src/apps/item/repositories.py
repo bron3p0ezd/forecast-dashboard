@@ -17,6 +17,8 @@ class ItemRepository(Repository):
     async def select_items_by_subcategory(
         self,
         subcategory: str | None,
+        limit: int,
+        offset: int,
     ) -> list[Item]:
         ...
 

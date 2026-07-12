@@ -16,7 +16,9 @@ class ItemService(Service):
     @abstractmethod
     async def get_items(
         self,
-        subcategory: str | None
+        subcategory: str | None,
+        page: int,
+        page_size: int,
     ) -> ItemsResponse:
         ...
 

@@ -20,11 +20,20 @@ class ItemServiceImpl(ItemService):
 
     async def get_items(
         self,
-        subcategory: str | None
+        subcategory: str | None,
+        page: int,
+        page_size: int,
     ) -> ItemsResponse:
-        items = await self.__repository.select_items_by_subcategory(subcategory)
+        items = await self.__repository.select_items_by_subcategory(
+            subcategory=subcategory,
+            limit=page_size + 1,
+            offset=(page - 1) * page_size,
+        )
 
-        return self.__build_items_response(items)
+        return self.__build_items_response(
+            items=items[:page_size],
+            has_next=len(items) > page_size,
+        )
 
     async def get_item(
         self,
@@ -57,9 +66,11 @@ class ItemServiceImpl(ItemService):
     def __build_items_response(
         self,
         items: list[Item],
+        has_next: bool,
     ) -> ItemsResponse:
         return ItemsResponse(
-            items=[self.__build_item_response(item) for item in items]
+            items=[self.__build_item_response(item) for item in items],
+            has_next=has_next,
         )
 
     def __build_item_response(

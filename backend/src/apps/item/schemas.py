@@ -13,6 +13,7 @@ class ItemResponse(BaseModel):
 
 class ItemsResponse(BaseModel):
     items: list[ItemResponse]
+    has_next: bool
 
 
 class ItemRowResponse(BaseModel):

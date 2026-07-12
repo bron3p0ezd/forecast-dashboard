@@ -22,9 +22,24 @@ async def get_items(
         default=None,
         description="Категория товаров"
     ),
+    page: int = Query(
+        default=1,
+        ge=1,
+        description="Page number",
+    ),
+    page_size: int = Query(
+        default=20,
+        ge=1,
+        le=100,
+        description="Items per page",
+    ),
     item_service: ItemService = Depends(get_item_service),
 ):
-    response = await item_service.get_items(subcategory)
+    response = await item_service.get_items(
+        subcategory=subcategory,
+        page=page,
+        page_size=page_size,
+    )
     return response
 
 

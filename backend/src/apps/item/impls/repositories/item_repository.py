@@ -18,11 +18,15 @@ class ItemRepostioryImpl(ItemRepository, SQLAlchemyRepository[Item]):
 
     async def select_items_by_subcategory(
         self,
-        subcategory: str | None
+        subcategory: str | None,
+        limit: int,
+        offset: int,
     ) -> list[Item]:
         stmt = (
             select(Item)
             .order_by(Item.item_id)
+            .limit(limit)
+            .offset(offset)
         )
 
         if subcategory is not None:
