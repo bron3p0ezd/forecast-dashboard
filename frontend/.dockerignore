@@ -1,0 +1,50 @@
+.git
+.github
+
+# Dependencies and build output
+node_modules
+dist
+dist-ssr
+.vite
+
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Environment files
+.env
+.env.*
+!.env.example
+*.local
+
+# Local editor / agent files
+.cursor
+**/.cursor
+.cursorignore
+.cursorignorerules
+.cursorrules
+
+.vscode
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+docker-compose*.yml
+compose*.yaml
+.dockerignore
+
+# Project docs are not needed in the image build context
+README.md
+*.md
+
+coverage
+.eslintcache
+*.tsbuildinfo

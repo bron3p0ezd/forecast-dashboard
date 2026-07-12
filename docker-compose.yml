@@ -1,0 +1,49 @@
+x-backend-api-host: &backend-api-host ${BACKEND_API_HOST:-http://localhost/api}
+
+services:
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_BACKEND_URL: *backend-api-host
+    volumes:
+        - ./frontend/dist:/out
+
+  backend:
+    build: 
+        context: ./backend
+        dockerfile: Dockerfile
+    volumes:
+        - ./database:/sqlite/database
+    env_file:
+        - ./backend/src/envs/.env
+    environment:
+        DB_PATH: "/sqlite/database/forecast_demo.db"
+    expose:
+        - 8000
+    restart: unless-stopped
+    networks:
+      - appnet
+
+  nginx:
+    build:
+      context: ./web-server
+      dockerfile: Dockerfile
+    depends_on:
+      frontend:
+        condition: service_completed_successfully
+      backend:
+        condition: service_healthy
+    ports:
+      - "80:80"
+    volumes:
+      - ./web-server/nginx/logs:/web-server/logs
+      - ./frontend/dist:/usr/share/nginx/frontend/html:ro
+    restart: unless-stopped
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge
