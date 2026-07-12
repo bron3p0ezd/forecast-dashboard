@@ -1,4 +1,4 @@
-type QueryParams = Record<string, string | undefined>;
+type QueryParams = Record<string, number | string | undefined>;
 
 type FetchClientOptions = {
   query?: QueryParams;
@@ -28,7 +28,7 @@ const buildQueryString = (query?: QueryParams) => {
   const params = new URLSearchParams();
 
   Object.entries(query ?? {}).forEach(([key, value]) => {
-    const trimmedValue = value?.trim();
+    const trimmedValue = value?.toString().trim();
 
     if (trimmedValue) {
       params.set(key, trimmedValue);

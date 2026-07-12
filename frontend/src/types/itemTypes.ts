@@ -6,6 +6,7 @@ export type Item = {
 
 export type ItemsResponse = {
   items: Item[];
+  has_next: boolean;
 };
 
 export type ItemRow = {
