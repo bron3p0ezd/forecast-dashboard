@@ -49,6 +49,11 @@ export function ItemDetailPage({ sku }: ItemDetailPageProps) {
   const [itemError, setItemError] = useState<string | null>(null);
   const [rowsError, setRowsError] = useState<string | null>(null);
 
+  const isDateRangeValid =
+    dateFrom &&
+    dateTo &&
+    new Date(dateFrom) <= new Date(dateTo);
+
   useEffect(() => {
     let isActive = true;
 
@@ -175,15 +180,20 @@ export function ItemDetailPage({ sku }: ItemDetailPageProps) {
             />
             <TextField
               fullWidth
-              InputLabelProps={{ shrink: true }}
-              label="До"
-              name="date_to"
               type="date"
+              label="До"
+              InputLabelProps={{ shrink: true }}
               value={dateTo}
               onChange={(event) => setDateTo(event.target.value)}
+              error={Boolean(dateFrom && dateTo && !isDateRangeValid)}
+              helperText={
+                  dateFrom && dateTo && !isDateRangeValid
+                  ? 'Дата окончания должна быть не раньше даты начала'
+                  : ' '
+              }
             />
             <Button
-              disabled={isRowsLoading || !dateFrom || !dateTo}
+              disabled={isRowsLoading || !dateFrom || !dateTo || !isDateRangeValid }
               sx={{ minWidth: 140 }}
               type="submit"
               variant="contained"
