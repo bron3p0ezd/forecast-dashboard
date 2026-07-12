@@ -9,7 +9,8 @@
 
 ### 2. Запуск вручную
 Нужно провести все этапы по очереди.
-1. Создание venv для backend:
+1. Создание venv для backend.
+
 Windows:
 ```sh
 cd backend
@@ -20,16 +21,31 @@ pip install -r requirements.txt
 Linux:
 ```sh
 cd backend
-python -m venv .venv
-.venv\Scripts\activate
+python3 -m venv .venv
+source .venv/bin/activate
 pip install -r requirements.txt
 ```
-2. Запуск backend
+
+2. Настройка env для backend
+
+Backend читает переменные окружения из файла `backend/src/envs/.env`. Для ручного запуска файл должен существовать и содержать актуальный путь к SQLite базе. Пример:
+```env
+DB_PATH="../../database/forecast_demo.db"
+
+DOCS_URL_ENABLED="/docs"
+REDOC_URL_ENABLED="/redocs"
+OPENAPI_URL_ENABLED="/openapi"
+```
+`DB_PATH` - обязательная переменная. Остальные переменные опциональны и включают страницы документации FastAPI.
+
+3. Запуск backend
 ```sh
 cd src
 uvicorn main:app
 ```
-3. Запуск frontend
+
+4. Запуск frontend
+
 В новом терминале из корня проекта скопируйте `frontend/.env.example` в `frontend/.env`, затем:
 ```sh
 cd frontend
