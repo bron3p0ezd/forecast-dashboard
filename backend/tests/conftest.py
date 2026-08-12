@@ -19,6 +19,7 @@ from settings.database import Base
 from tests.fixtures.dependencies import (  # noqa: E402, F401
     daily_repository,
     item_repository,
+    item_service,
 )
 from tests.fixtures.database_data import (  # noqa: E402, F401
     database_data,
