@@ -51,6 +51,11 @@ class ItemServiceImpl(ItemService):
         date_from: date,
         date_to: date,
     ) -> ItemRowsResponse:
+        item = await self.__repository.select_item_by_sku(sku)
+
+        if item is None:
+            raise ItemNotFoundError(sku)
+
         rows = await self.__daily_repository.select_item_rows(
             sku=sku,
             date_from=date_from,
@@ -58,7 +63,7 @@ class ItemServiceImpl(ItemService):
         )
 
         return self.__build_item_rows_response(rows)
-        
+
     def __build_items_response(
         self,
         items: list[Item],

@@ -87,9 +87,16 @@ async def get_item_rows(
     query: Annotated[ItemRowsQuery, Query()],
     item_service: ItemService = Depends(get_item_service),
 ):
-    response = await item_service.get_item_rows(
-        sku=sku,
-        date_from=query.date_from,
-        date_to=query.date_to,
-    )
+    try:
+        response = await item_service.get_item_rows(
+            sku=sku,
+            date_from=query.date_from,
+            date_to=query.date_to,
+        )
+    except ItemNotFoundError as error:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(error),
+        ) from error
+
     return response
