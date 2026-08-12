@@ -1,6 +1,6 @@
 from datetime import date
 
-from pydantic import BaseModel, ConfigDict
+from pydantic import BaseModel, ConfigDict, model_validator
 
 from apps.item.enums import BiasDirection
 
@@ -38,3 +38,15 @@ class ItemMetrics(BaseModel):
 class ItemRowsResponse(BaseModel):
     rows: list[ItemRowResponse]
     metrics: ItemMetrics
+
+
+class ItemRowsQuery(BaseModel):
+    date_from: date
+    date_to: date
+
+    @model_validator(mode="after")
+    def validate_date_range(self) -> "ItemRowsQuery":
+        if self.date_from > self.date_to:
+            raise ValueError("date_from must be before or equal to date_to")
+
+        return self

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Conventional Commits"
+  short_description: "Create project commits in the established style"
+  default_prompt: "Use $conventional-commits to create a commit in the project style."

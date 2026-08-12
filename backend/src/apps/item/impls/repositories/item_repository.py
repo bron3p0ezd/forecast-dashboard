@@ -5,7 +5,7 @@ from apps.item.repositories import ItemRepository
 from settings.impls.sql_alchemy_repositories import SQLAlchemyRepository
 
 
-class ItemRepostioryImpl(ItemRepository, SQLAlchemyRepository[Item]):
+class ItemRepositoryImpl(ItemRepository, SQLAlchemyRepository[Item]):
     cls_model = Item
 
     async def select_item_by_sku(

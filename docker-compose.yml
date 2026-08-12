@@ -16,8 +16,6 @@ services:
         dockerfile: Dockerfile
     volumes:
         - ./database:/sqlite/database
-    env_file:
-        - ./backend/src/envs/.env
     environment:
         DB_PATH: "/sqlite/database/forecast_demo.db"
     expose:
