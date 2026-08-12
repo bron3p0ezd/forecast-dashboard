@@ -1,4 +1,4 @@
-# Forecat - Dashboard
+# Forecast - Dashboard
 
 ## Запуск
 
