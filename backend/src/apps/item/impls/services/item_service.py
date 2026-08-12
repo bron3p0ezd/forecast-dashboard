@@ -1,8 +1,7 @@
 from datetime import date
 
-from fastapi import HTTPException, status
-
 from apps.item.enums import BiasDirection
+from apps.item.exceptions import ItemNotFoundError
 from apps.item.models import Daily, Item
 from apps.item.services import ItemService
 from apps.item.repositories import DailyRepository, ItemRepository
@@ -38,14 +37,11 @@ class ItemServiceImpl(ItemService):
     async def get_item(
         self,
         sku: str,
-    ) -> ItemResponse | None:
+    ) -> ItemResponse:
         item = await self.__repository.select_item_by_sku(sku)
 
         if item is None:
-            raise HTTPException(
-                status_code=status.HTTP_404_NOT_FOUND,
-                detail="Item not found",
-            )
+            raise ItemNotFoundError(sku)
 
         return self.__build_item_response(item)
 

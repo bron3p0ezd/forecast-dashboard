@@ -1,7 +1,8 @@
 from datetime import date
 
-from fastapi import APIRouter, Depends, Path, Query
+from fastapi import APIRouter, Depends, HTTPException, Path, Query, status
 
+from apps.item.exceptions import ItemNotFoundError
 from apps.item.schemas import ItemResponse, ItemRowsResponse, ItemsResponse
 from apps.item.services import ItemService
 from apps.item.dependencies import get_item_service
@@ -51,7 +52,14 @@ async def get_item(
     sku: str = Path(),
     item_service: ItemService = Depends(get_item_service),
 ):
-    response = await item_service.get_item(sku)
+    try:
+        response = await item_service.get_item(sku)
+    except ItemNotFoundError as error:
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail=str(error),
+        ) from error
+
     return response
 
 

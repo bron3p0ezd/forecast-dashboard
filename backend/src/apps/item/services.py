@@ -10,7 +10,7 @@ class ItemService(Service):
     async def get_item(
         self,
         sku: str,
-    ) -> ItemResponse | None:
+    ) -> ItemResponse:
         ...
 
     @abstractmethod
